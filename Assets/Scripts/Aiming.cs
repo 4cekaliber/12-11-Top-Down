@@ -13,12 +13,21 @@ public class Aiming : MonoBehaviour
     [SerializeField] private float timeBetweenFiring;
     [SerializeField] private AudioClip firingSound;
     private AudioSource audioSource;
+    private StatScript statManagerScript;
+    private GameObject newBullet;
+    private GameObject newPelletOne;
+    private GameObject newPelletTwo;
+    private GameObject newPelletThree;
+    private Vector3 rotation;
+    private Vector3 rotation1;
+    private Vector3 rotation2;
 
-   void Start()
+    void Awake()
     {
         mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         audioSource = GetComponent<AudioSource>();
         audioSource.clip = firingSound;
+        statManagerScript = GameObject.Find("StatManager").GetComponent<StatScript>();
     }
 
     // Update is called once per frame
@@ -26,7 +35,10 @@ public class Aiming : MonoBehaviour
     {
         mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
 
-        Vector3 rotation = mousePos - transform.position;
+        rotation = mousePos - transform.position;
+        //makes another vector that is 20 degrees more than rotation along the z axis(Vector3.forward)
+        rotation1 = Quaternion.AngleAxis(20f, Vector3.forward) * rotation;
+        rotation2 = Quaternion.AngleAxis(-20f, Vector3.forward) * rotation;
 
         float rotZ = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
 
@@ -41,17 +53,39 @@ public class Aiming : MonoBehaviour
             }
         }
         
-        if(Input.GetKeyDown(KeyCode.Space) && canFire)
+        if(Input.GetKeyDown(KeyCode.Space) && canFire && statManagerScript.usingRevolver)
         {
-            fire();
+            fireSingle();
+        }else if (Input.GetKeyDown(KeyCode.Space) && canFire && statManagerScript.usingShotgun)
+        {
+            fireSpread();
         }
     }
 
-    void fire()
+    void fireSingle()
     {
          canFire = false;
          AudioSource.PlayClipAtPoint(firingSound,transform.position,1f);
-         Instantiate(bullet, bulletTransform.position, Quaternion.identity);
-   
+         newBullet = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
+         newBullet.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(rotation.x, rotation.y).normalized * 2;
+        Debug.Log("Roation : " + rotation);
+
+        //magic number 2 in above line is same as force in unity editor serialized filed for bulletScript
+    }
+
+    void fireSpread()
+    {
+        canFire = false;
+        AudioSource.PlayClipAtPoint(firingSound, transform.position, 1f);
+        newPelletOne = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
+        newPelletOne.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(rotation.x, rotation.y).normalized * 2;
+        newPelletTwo = Instantiate(bullet, bulletTransform.position, Quaternion.Euler(0,0,0));
+        newPelletTwo.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(rotation1.x, rotation1.y).normalized * 2;
+        newPelletThree = Instantiate(bullet, bulletTransform.position, Quaternion.Euler(0, 0, 0));
+        newPelletThree.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(rotation2.x, rotation2.y).normalized * 2;
+        //newPelletThree.transform.rotation = Quaternion.Euler(0, 0, 90);
+
+
+
     }
 }

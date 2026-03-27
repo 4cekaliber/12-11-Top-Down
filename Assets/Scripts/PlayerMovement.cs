@@ -12,6 +12,9 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField]private InputActionReference move;
 
+    private GameObject player;
+    private PlayerHealthManager healthManager;
+
     private GameObject statManager;
     private StatScript statManagerScript;
 
@@ -19,9 +22,9 @@ public class PlayerMovement : MonoBehaviour
     private SpriteRenderer spriteRenderer;
 
     private GameObject Key1;
-    private GameObject Key1Image;
+    private GameObject Shotgun;
 
-    private GameObject inventory;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -33,17 +36,17 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         move.action.Enable();
 
+        player = GameObject.Find("Player");
+        healthManager = player.GetComponent<PlayerHealthManager>();
+
         statManager = GameObject.Find("StatManager");
         statManagerScript = statManager.GetComponent<StatScript>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         Key1 = GameObject.Find("Key");
-        inventory = GameObject.Find("Inventory");
-        inventory.SetActive(false);
-        
+        Shotgun = GameObject.Find("Shotgun");
 
-        Key1Image = GameObject.Find("Key Image");
-        Key1Image.SetActive(false);
+
     }
     void Update()
     {
@@ -66,11 +69,6 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("isRunning", false);
         }
 
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            Debug.Log(statManagerScript.getItemState("Key1"));
-            inventoryActivation();
-        }
     }
 
     private void FixedUpdate()
@@ -82,39 +80,29 @@ public class PlayerMovement : MonoBehaviour
     {
         if (context.gameObject.tag == "Enemy" )
         {
-            statManagerScript.takeDamage(10);
+            healthManager.takeDamage(10);
         }
 
     }
 
     private void OnTriggerStay2D(Collider2D context)
     {
-        Debug.Log("Enter trigger");
+        //Debug.Log("Enter trigger");
         if ((context.gameObject.tag == "Key1") && (Input.GetKeyDown(KeyCode.F)))
         {
             Debug.Log("grabbing key");
             statManagerScript.grabbed("Key1");
             Key1.SetActive(false);
         }
+
+        if ((context.gameObject.tag == "Shotgun") && (Input.GetKeyDown(KeyCode.F)))
+        {
+            Debug.Log("grabbing Shotgun");
+            statManagerScript.grabbed("Shotgun");
+            Shotgun.SetActive(false);
+        }
     }
 
-    private void inventoryActivation()
-    {
-        if (inventory.activeSelf)
-        {
-            inventory.SetActive(false);
-            Key1Image.SetActive(false);
-        }
-        else
-        {
-            inventory.SetActive(true);
-            if (statManagerScript.getItemState("Key1"))
-            {
-                Key1Image.SetActive(true);
-            }
-        }
-
-        
-    }
+    
 }
    

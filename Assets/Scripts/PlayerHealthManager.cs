@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerHealthManager : MonoBehaviour
 {
@@ -8,6 +10,7 @@ public class PlayerHealthManager : MonoBehaviour
     private float damageCooldownTimer;
 
     private float playerHealth;
+    [SerializeField] private Image healthBar;
     void Start()
     {
         
@@ -17,27 +20,44 @@ public class PlayerHealthManager : MonoBehaviour
     void Update()
     {
         damageCooldownTimer += Time.deltaTime;
+
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            heal(10);
+        }
+
+        if (playerHealth <= 0)
+        {
+            SceneManager.LoadScene("Game Over");
+        }
     }
     private void Awake()
     {
         playerHealth = 100;
         damageCooldown = 2f;
     }
-    void takeDamage()
+    public void takeDamage(float damageTaken)
     {
         if (damageCooldownTimer >=damageCooldown)
         {
             damageCooldownTimer = 0f;
-            playerHealth -= 20;
+            playerHealth -= damageTaken;
+            healthBar.fillAmount = playerHealth / 100f;
         }
         
+    }
+
+    public void heal(float healingApplied)
+    {
+        playerHealth += healingApplied;
+        healthBar.fillAmount = playerHealth / 100f;
     }
 
     private void OnCollisionEnter2D(Collision2D context)
     {
         if (context.gameObject.tag == "Enemy")
         {
-            takeDamage();
+            takeDamage(20);
         }
     }
 }

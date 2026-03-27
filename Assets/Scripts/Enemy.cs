@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class Enemy : MonoBehaviour
     private Rigidbody2D rb;
     private Transform target;
     private Vector2 moveDirection;
+    NavMeshAgent agent;
 
     private GameObject statManager;
     private StatScript statManagerScript;
@@ -17,6 +19,7 @@ public class Enemy : MonoBehaviour
     private float attackTimer;
     private void Awake()
     {
+        target = GameObject.Find("Player").transform;
         rb = GetComponent<Rigidbody2D>();
         statManager = GameObject.Find("StatManager");
         statManagerScript = statManager.GetComponent<StatScript>();
@@ -27,7 +30,9 @@ public class Enemy : MonoBehaviour
     }
     void Start()
     {
-        target = GameObject.Find("Player").transform;
+        agent = GetComponent<NavMeshAgent>();
+        agent.updateRotation = false;
+        agent.updateUpAxis = false;
     }
 
     // Update is called once per frame
@@ -64,10 +69,13 @@ public class Enemy : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (target)
-        {
-            rb.linearVelocity = new Vector2(moveDirection.x,moveDirection.y) * moveSpeed;
-        }
+        //if (target)
+        //{
+        //    rb.linearVelocity = new Vector2(moveDirection.x,moveDirection.y) * moveSpeed;
+        //}
+        agent.ResetPath();
+        agent.SetDestination(target.position);
+
     }
 
     private void OnCollisionEnter2D(Collision2D context)

@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 public class BulletScript : MonoBehaviour
 {
@@ -16,11 +17,20 @@ public class BulletScript : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
         Vector3 direction = mousePos - transform.position;
-        Vector3 rotation = transform.position - mousePos;
-        rb.linearVelocity = new Vector2(direction.x,direction.y).normalized * force;
+        //Vector3 rotation = transform.position - mousePos;
+        //rb.linearVelocity = new Vector2(direction.x,direction.y).normalized * force;
 
-        float rot = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0,0,rot + 90);
+        float rot = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, 0, rot + 90);
+
+    }
+
+    private void Awake()
+    {
+        Vector3 direction = mousePos - transform.position;
+
+        float rot = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
     }
 
     // Update is called once per frame
@@ -29,7 +39,7 @@ public class BulletScript : MonoBehaviour
         bulletLife += Time.deltaTime;
         if (bulletLife > 3)
         {
-            Destroy(gameObject);
+            //Destroy(gameObject);
         }
     }
 }
