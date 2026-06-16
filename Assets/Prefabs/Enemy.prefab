@@ -85,7 +85,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1849521665
   m_SortingLayer: 1
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_MaskInteraction: 1
   m_Sprite: {fileID: 7659173831624497606, guid: 17a81e4c2c6b64746be5dad836946f1d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -138,6 +138,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 1
   animator: {fileID: 5756962313791733050}
+  damageParticles: {fileID: 8855724414486179816, guid: dbc3398ed27a9504a8dd6dd004b621d6, type: 3}
 --- !u!61 &8671234825611041749
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -145,7 +146,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8235769601900110134}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -154,7 +155,7 @@ BoxCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 72
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -213,7 +214,7 @@ CircleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8235769601900110134}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -252,8 +253,8 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.05
-  m_Speed: 1.5
-  m_Acceleration: 8
+  m_Speed: 1
+  m_Acceleration: 4
   avoidancePriority: 50
   m_AngularSpeed: 360
   m_StoppingDistance: 0

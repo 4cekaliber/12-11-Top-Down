@@ -7,7 +7,7 @@ public class BulletScript : MonoBehaviour
     private Vector3 mousePos;
     private Camera mainCam;
     private Rigidbody2D rb;
-    [SerializeField] private float force;
+    public float force;
 
     private float bulletLife;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -33,13 +33,20 @@ public class BulletScript : MonoBehaviour
 
     }
 
-    // Update is called once per frame
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag != "Player")
+        {
+            Destroy(gameObject);
+
+        }
+    }
     void Update()
     {
         bulletLife += Time.deltaTime;
         if (bulletLife > 3)
         {
-            //Destroy(gameObject);
+            Destroy(gameObject);
         }
     }
 }

@@ -67,7 +67,7 @@ public class Aiming : MonoBehaviour
          canFire = false;
          AudioSource.PlayClipAtPoint(firingSound,transform.position,1f);
          newBullet = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
-         newBullet.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(rotation.x, rotation.y).normalized * 2;
+         newBullet.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(rotation.x, rotation.y).normalized * newBullet.GetComponent<BulletScript>().force;
         Debug.Log("Roation : " + rotation);
 
         //magic number 2 in above line is same as force in unity editor serialized filed for bulletScript
@@ -78,11 +78,11 @@ public class Aiming : MonoBehaviour
         canFire = false;
         AudioSource.PlayClipAtPoint(firingSound, transform.position, 1f);
         newPelletOne = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
-        newPelletOne.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(rotation.x, rotation.y).normalized * 2;
+        newPelletOne.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(rotation.x, rotation.y).normalized * newPelletOne.GetComponent<BulletScript>().force;
         newPelletTwo = Instantiate(bullet, bulletTransform.position, Quaternion.Euler(0,0,0));
-        newPelletTwo.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(rotation1.x, rotation1.y).normalized * 2;
+        newPelletTwo.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(rotation1.x, rotation1.y).normalized * newPelletOne.GetComponent<BulletScript>().force;
         newPelletThree = Instantiate(bullet, bulletTransform.position, Quaternion.Euler(0, 0, 0));
-        newPelletThree.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(rotation2.x, rotation2.y).normalized * 2;
+        newPelletThree.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(rotation2.x, rotation2.y).normalized * newPelletOne.GetComponent<BulletScript>().force;
         //newPelletThree.transform.rotation = Quaternion.Euler(0, 0, 90);
 
 

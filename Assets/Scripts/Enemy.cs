@@ -17,6 +17,9 @@ public class Enemy : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private float attackLength;
     private float attackTimer;
+
+    [SerializeField] private ParticleSystem damageParticles;
+    private ParticleSystem damageParticlesInstance;
     private void Awake()
     {
         target = GameObject.Find("Player").transform;
@@ -82,6 +85,7 @@ public class Enemy : MonoBehaviour
     {
         if (context.gameObject.tag == "Bullet")
         {
+            damageParticlesInstance = Instantiate(damageParticles, transform.position, Quaternion.identity);
             statManagerScript.addScore(100);
             Destroy(gameObject);
         }
