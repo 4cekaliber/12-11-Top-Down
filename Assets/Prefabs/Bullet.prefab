@@ -108,6 +108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   force: 10
+  destroyedParticles: {fileID: 2993825705444858192, guid: 7df432b65b7dce8448689dadb77b6e00, type: 3}
 --- !u!50 &2080487322784191864
 Rigidbody2D:
   serializedVersion: 5

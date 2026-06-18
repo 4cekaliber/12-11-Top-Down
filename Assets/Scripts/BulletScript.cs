@@ -11,6 +11,9 @@ public class BulletScript : MonoBehaviour
 
     private float bulletLife;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [SerializeField] private ParticleSystem destroyedParticles;
+
+    private ParticleSystem destroyedParticlesInstance;
     void Start()
     {
         mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
@@ -35,6 +38,10 @@ public class BulletScript : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.gameObject.layer == 6)
+        {
+            destroyedParticlesInstance = Instantiate(destroyedParticles, transform.position, Quaternion.identity);
+        }
         if (collision.gameObject.tag != "Player")
         {
             Destroy(gameObject);

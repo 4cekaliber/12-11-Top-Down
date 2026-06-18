@@ -20,6 +20,9 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] private ParticleSystem damageParticles;
     private ParticleSystem damageParticlesInstance;
+
+    [SerializeField] private Transform[] patrolPoints;
+    private int patrolDestination;
     private void Awake()
     {
         target = GameObject.Find("Player").transform;
@@ -30,6 +33,7 @@ public class Enemy : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         attackLength = 40f;
         attackTimer = 0f;
+        patrolDestination = 0;
     }
     void Start()
     {
@@ -76,8 +80,24 @@ public class Enemy : MonoBehaviour
         //{
         //    rb.linearVelocity = new Vector2(moveDirection.x,moveDirection.y) * moveSpeed;
         //}
-        agent.ResetPath();
-        agent.SetDestination(target.position);
+
+        if (patrolDestination == 0)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, patrolPoints[0].position, moveSpeed * Time.deltaTime);
+            if (Vector2.Distance(transform.position, patrolPoints[0].position) < 0.1)
+            {
+                patrolDestination = 1;
+            }
+        }else if (patrolDestination == 1)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, patrolPoints[1].position, moveSpeed * Time.deltaTime);
+            if (Vector2.Distance(transform.position, patrolPoints[1].position) < 0.1)
+            {
+                patrolDestination = 0;
+            }
+        }
+        //agent.ResetPath();
+        //agent.SetDestination(target.position);
 
     }
 
