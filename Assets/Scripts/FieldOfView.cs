@@ -12,7 +12,7 @@ public class FieldOfView : MonoBehaviour
 
         float fov = 90f;
         Vector3 origin = Vector3.zero;
-        int rayCount = 2;
+        int rayCount = 50;
         float angle = 0f;
         float angleIncrease = fov / rayCount;
         float viewDistance = 50f;
@@ -27,15 +27,25 @@ public class FieldOfView : MonoBehaviour
         int triangleIndex = 0;
         for (int i = 0; i<= rayCount;i++)
         {
+            Vector3 vertex;
             float angleRad = angle * (Mathf.PI / 180f);
             Vector3 convertedAngle = new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
-            Vector3 vertex = origin + convertedAngle * viewDistance;
+            RaycastHit2D raycastHit2D = Physics2D.Raycast(origin, convertedAngle, viewDistance);
+
+            if (raycastHit2D.collider == null)
+            {
+                vertex = origin + convertedAngle * viewDistance;
+            }
+            else
+            {
+                vertex = raycastHit2D.point;
+            }
             vertices[vertexIndex] = vertex;
 
             if (i > 0)
             {
                 triangles[triangleIndex + 0] = 0;
-                triangles[triangleIndex + 1] = vertexIndex -1;
+                triangles[triangleIndex + 1] = vertexIndex - 1;
                 triangles[triangleIndex + 2] = vertexIndex;
 
                 triangleIndex += 3;

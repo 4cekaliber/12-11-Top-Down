@@ -22,6 +22,11 @@ public class Aiming : MonoBehaviour
     private Vector3 rotation1;
     private Vector3 rotation2;
 
+    private float fovAngle = 90f;
+    [SerializeField] private Transform flashlightTransform;
+    private float range = 0.2f;
+    [SerializeField] private Transform target;
+
     void Awake()
     {
         mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
@@ -60,6 +65,21 @@ public class Aiming : MonoBehaviour
         {
             fireSpread();
         }
+
+        Vector2 direction = target.position - transform.position;
+        float angle = Vector3.Angle(direction, flashlightTransform.right);
+        RaycastHit2D rayHit = Physics2D.Raycast(flashlightTransform.position, direction, range);
+
+        if ((angle < (fovAngle / 2)) && rayHit.collider.CompareTag("Player"))
+        {
+            print("Found!");
+            
+        }
+        else
+        {
+            print("Nothing Seen");
+        }
+        Debug.DrawRay(flashlightTransform.position, direction* range, Color.red);
     }
 
     void fireSingle()
@@ -68,7 +88,7 @@ public class Aiming : MonoBehaviour
          AudioSource.PlayClipAtPoint(firingSound,transform.position,1f);
          newBullet = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
          newBullet.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(rotation.x, rotation.y).normalized * newBullet.GetComponent<BulletScript>().force;
-        Debug.Log("Roation : " + rotation);
+         //Debug.Log("Roation : " + rotation);
 
         //magic number 2 in above line is same as force in unity editor serialized filed for bulletScript
     }
