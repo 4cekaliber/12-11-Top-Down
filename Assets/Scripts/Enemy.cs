@@ -23,6 +23,10 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] private Transform[] patrolPoints;
     private int patrolDestination;
+
+    private float fovAngle = 90f;
+    [SerializeField] private Transform flashlightTransform;
+    private float range = 100f;
     private void Awake()
     {
         target = GameObject.Find("Player").transform;
@@ -45,23 +49,21 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (target)
-        {
-            Vector3 direction = (target.position - transform.position).normalized;
-            moveDirection = direction;
+        //if (target)
+        //{
+        //    Vector3 direction2 = (target.position - transform.position).normalized;
+        //    moveDirection = direction2;
 
-            //float angle = Mathf.Atan2(direction.y,direction.x)* Mathf.Rad2Deg;
-            //rb.rotation = angle;
-        }
+        //}
 
-        if (moveDirection.x < 0)
-        {
-            spriteRenderer.flipX = true;
-        }
-        else
-        {
-            spriteRenderer.flipX = false;
-        }
+        //if (moveDirection.x < 0)
+        //{
+        //    spriteRenderer.flipX = true;
+        //}
+        //else
+        //{
+        //    spriteRenderer.flipX = false;
+        //}
 
         /*if (animator.GetBool("isAttacking") == true)
         {
@@ -72,13 +74,37 @@ public class Enemy : MonoBehaviour
             }
         }*/
         //Debug.Log(animator.GetBool("isRunning"));
+        Vector2 direction = target.position - transform.position;
+        float angle = Vector3.Angle(direction, flashlightTransform.right);
+        if (patrolDestination == 0)
+        {
+            angle = Vector3.Angle(direction, Quaternion.AngleAxis(180f, Vector3.forward) * flashlightTransform.right);
+        }
+        RaycastHit2D rayHit = Physics2D.Raycast(flashlightTransform.position, direction, range);
+        if (angle < (fovAngle / 2) && rayHit.collider)
+        {
+            if (rayHit.collider.CompareTag("Player"))
+            {
+                //print("Found!");
+                attackTimer = 0f;
+                animator.SetTrigger("attack");
+
+            }
+            else
+            {
+                //print("Nothing Seen");
+            }
+            print(rayHit.collider.name);
+            Vector2 hitDirection = rayHit.collider.transform.position - transform.position;
+            Debug.DrawRay(flashlightTransform.position, hitDirection, Color.green);
+        }
     }
 
     private void FixedUpdate()
     {
         //if (target)
         //{
-        //    rb.linearVelocity = new Vector2(moveDirection.x,moveDirection.y) * moveSpeed;
+        //    rb.linearVelocity = new Vector2(moveDirection.x, moveDirection.y) * moveSpeed;
         //}
 
         if (patrolDestination == 0)
@@ -87,13 +113,16 @@ public class Enemy : MonoBehaviour
             if (Vector2.Distance(transform.position, patrolPoints[0].position) < 0.1)
             {
                 patrolDestination = 1;
+                transform.localScale = new Vector3(3, 3, 1);
             }
-        }else if (patrolDestination == 1)
+        }
+        else if (patrolDestination == 1)
         {
             transform.position = Vector2.MoveTowards(transform.position, patrolPoints[1].position, moveSpeed * Time.deltaTime);
             if (Vector2.Distance(transform.position, patrolPoints[1].position) < 0.1)
             {
                 patrolDestination = 0;
+                transform.localScale = new Vector3(-3, 3, 1);
             }
         }
         //agent.ResetPath();
