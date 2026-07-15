@@ -53,11 +53,11 @@ public class PlayerHealthManager : MonoBehaviour
         healthBar.fillAmount = playerHealth / 100f;
     }
 
-    private void OnCollisionEnter2D(Collision2D context)
-    {
-        if (context.gameObject.tag == "Enemy")
-        {
-            takeDamage(20);
-        }
-    }
+    //private void OnCollisionEnter2D(Collision2D context)
+    //{
+    //    if (context.gameObject.tag == "Enemy")
+    //    {
+    //        takeDamage(20);
+    //    }
+    //}
 }

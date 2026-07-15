@@ -12,6 +12,7 @@ public class Enemy : MonoBehaviour
 
     private GameObject statManager;
     private StatScript statManagerScript;
+    private PlayerHealthManager playerHealthManagerScript;
 
     [SerializeField] private Animator animator;
     private SpriteRenderer spriteRenderer;
@@ -80,7 +81,8 @@ public class Enemy : MonoBehaviour
         {
             angle = Vector3.Angle(direction, Quaternion.AngleAxis(180f, Vector3.forward) * flashlightTransform.right);
         }
-        RaycastHit2D rayHit = Physics2D.Raycast(flashlightTransform.position, direction, range);
+        Physics2D.queriesHitTriggers = false;
+        RaycastHit2D rayHit = Physics2D.Raycast(flashlightTransform.position, direction, range, Physics.DefaultRaycastLayers);
         if (angle < (fovAngle / 2) && rayHit.collider)
         {
             if (rayHit.collider.CompareTag("Player"))
@@ -132,24 +134,32 @@ public class Enemy : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D context)
     {
+        //if (context.gameObject.tag == "Bullet")
+        //{
+        //    damageParticlesInstance = Instantiate(damageParticles, transform.position, Quaternion.identity);
+        //    statManagerScript.addScore(100);
+        //    Destroy(gameObject);
+        //}
+
+       
+    }
+
+    private void OnTriggerEnter2D(Collider2D context)
+    {
+       
+        //if (context.gameObject.tag == "Player")
+        //{
+        //    //attackTimer = 0f;
+        //    //animator.SetTrigger("attack");
+        //    playerHealthManagerScript = GetComponent<PlayerHealthManager>();
+        //    playerHealthManagerScript.takeDamage(20);
+
+        //}
         if (context.gameObject.tag == "Bullet")
         {
             damageParticlesInstance = Instantiate(damageParticles, transform.position, Quaternion.identity);
             statManagerScript.addScore(100);
             Destroy(gameObject);
-        }
-
-       
-    }
-
-    private void OnTriggerStay2D(Collider2D context)
-    {
-       
-        if (context.gameObject.tag == "Player")
-        {
-            attackTimer = 0f;
-            animator.SetTrigger("attack");
-
         }
     }
 }
