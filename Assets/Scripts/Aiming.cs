@@ -11,7 +11,8 @@ public class Aiming : MonoBehaviour
     private bool canFire;
     private float timer;
     [SerializeField] private float timeBetweenFiring;
-    [SerializeField] private AudioClip firingSound;
+    [SerializeField] private AudioClip revolverFiringSound;
+    [SerializeField] private AudioClip shotgunFiringSound;
     private AudioSource audioSource;
     private StatScript statManagerScript;
     private GameObject newBullet;
@@ -27,7 +28,7 @@ public class Aiming : MonoBehaviour
     {
         mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         audioSource = GetComponent<AudioSource>();
-        audioSource.clip = firingSound;
+        audioSource.clip = revolverFiringSound;
         statManagerScript = GameObject.Find("StatManager").GetComponent<StatScript>();
     }
 
@@ -68,7 +69,7 @@ public class Aiming : MonoBehaviour
     void fireSingle()
     {
          canFire = false;
-         AudioSource.PlayClipAtPoint(firingSound,transform.position,1f);
+         AudioSource.PlayClipAtPoint(revolverFiringSound,transform.position,1f);
          newBullet = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
          newBullet.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(rotation.x, rotation.y).normalized * newBullet.GetComponent<BulletScript>().force;
          //Debug.Log("Roation : " + rotation);
@@ -79,7 +80,7 @@ public class Aiming : MonoBehaviour
     void fireSpread()
     {
         canFire = false;
-        AudioSource.PlayClipAtPoint(firingSound, transform.position, 1f);
+        AudioSource.PlayClipAtPoint(shotgunFiringSound, transform.position, 1f);
         newPelletOne = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
         newPelletOne.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(rotation.x, rotation.y).normalized * newPelletOne.GetComponent<BulletScript>().force;
         newPelletTwo = Instantiate(bullet, bulletTransform.position, Quaternion.Euler(0,0,0));

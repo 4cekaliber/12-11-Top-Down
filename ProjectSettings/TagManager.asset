@@ -8,6 +8,8 @@ TagManager:
   - Bullet
   - Key1
   - Shotgun
+  - enemyBullet
+  - Tank Enemy
   layers:
   - Default
   - TransparentFX
@@ -16,8 +18,8 @@ TagManager:
   - Water
   - UI
   - CollisionBackground
-  - 
-  - 
+  - Player
+  - Enemy
   - 
   - 
   - 

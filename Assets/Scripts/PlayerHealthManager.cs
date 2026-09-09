@@ -9,13 +9,21 @@ public class PlayerHealthManager : MonoBehaviour
     private float damageCooldown;
     private float damageCooldownTimer;
 
-    private float playerHealth;
+    public float playerHealth;
     [SerializeField] private Image healthBar;
-    void Start()
-    {
-        
-    }
+    public float playerStamina;
+    [SerializeField] private Image staminaBar;
+    [SerializeField] private AudioClip bloodHitSound;
+    private AudioSource audioSource;
 
+    private void Awake()
+    {
+        playerHealth = 100;
+        playerStamina = 100;
+        damageCooldown = 2f;
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = bloodHitSound;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -31,26 +39,46 @@ public class PlayerHealthManager : MonoBehaviour
             SceneManager.LoadScene("Game Over");
         }
     }
-    private void Awake()
+    
+    public void takeDamage(string weapon, float damageTaken)
     {
-        playerHealth = 100;
-        damageCooldown = 2f;
-    }
-    public void takeDamage(float damageTaken)
-    {
-        if (damageCooldownTimer >=damageCooldown)
+        if (damageCooldownTimer >=damageCooldown && (weapon == "sword"))
         {
             damageCooldownTimer = 0f;
             playerHealth -= damageTaken;
-            healthBar.fillAmount = playerHealth / 100f;
+            healthBar.fillAmount = playerHealth/ 100f;
+            AudioSource.PlayClipAtPoint(bloodHitSound, transform.position, 1f);
+            print("Health Damaged");
+        //issue: Tank doing stamina damage and not health damage
+        }
+        else if(damageCooldownTimer >= damageCooldown)
+        {
+            reduceStamina(33.334f);
         }
         
+    }
+    public void reduceStamina(float staminaTaken)
+    {
+        if (damageCooldownTimer >= damageCooldown)
+        {
+            damageCooldownTimer = 0f;
+            playerStamina -= staminaTaken;
+            staminaBar.fillAmount = playerStamina / 100f;
+            AudioSource.PlayClipAtPoint(bloodHitSound, transform.position, 1f);
+            print("Stamina Damaged");
+        }
     }
 
     public void heal(float healingApplied)
     {
         playerHealth += healingApplied;
         healthBar.fillAmount = playerHealth / 100f;
+    }
+
+    public void regenStamina(float stamina)
+    {
+        playerStamina += stamina;
+        staminaBar.fillAmount = playerStamina / 100f;
     }
 
     //private void OnCollisionEnter2D(Collision2D context)

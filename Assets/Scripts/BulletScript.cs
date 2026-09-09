@@ -12,8 +12,10 @@ public class BulletScript : MonoBehaviour
     private float bulletLife;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     [SerializeField] private ParticleSystem destroyedParticles;
-
     private ParticleSystem destroyedParticlesInstance;
+
+    [SerializeField] private AudioClip rockSound;
+    private AudioSource audioSource;
     void Start()
     {
         mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
@@ -34,16 +36,21 @@ public class BulletScript : MonoBehaviour
 
         float rot = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = rockSound;
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == 6)
+        //if (collision.gameObject == GameObject.Find("Collision Tilemap"))
+        //{
+        //    destroyedParticlesInstance = Instantiate(destroyedParticles, transform.position, Quaternion.identity);
+        //}
+        if (collision.gameObject.tag != "Player" && collision.gameObject.tag != "Enemy")
         {
-            destroyedParticlesInstance = Instantiate(destroyedParticles, transform.position, Quaternion.identity);
-        }
-        if (collision.gameObject.tag != "Player")
-        {
+            //destroyedParticlesInstance = Instantiate(destroyedParticles, transform.position, Quaternion.identity);
+            //AudioSource.PlayClipAtPoint(rockSound, transform.position, 1f);
             Destroy(gameObject);
 
         }

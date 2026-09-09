@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Runtime.CompilerServices;
 
 public class StatScript : MonoBehaviour
 {
@@ -28,6 +29,20 @@ public class StatScript : MonoBehaviour
 
     private GameObject bulletTransform;
     private GameObject inventory;
+
+    public int securityLevel;
+    [SerializeField] private Transform[] spawnPoints;
+    public float spawnTimer;
+    private float spawnCooldown;
+    private float spawnIntervalTimer;
+    private float spawnIntervalCooldown;
+    [SerializeField] private GameObject enemyPrefab;
+    private GameObject enemyInstance;
+
+    //0 means in cells, 1, means yard, and 2 means cafeteria
+    public int activityNumber;
+    public float activityTimer;
+    public float activityDuration;
     void Start()
     {
         
@@ -56,6 +71,15 @@ public class StatScript : MonoBehaviour
         inventory.SetActive(false);
 
         bulletTransform = GameObject.Find("BulletTransform");
+
+        spawnTimer = 0f;
+        spawnCooldown = 5f;
+        spawnIntervalTimer = 0f;
+        spawnIntervalCooldown = .5f;
+
+        activityNumber = 0;
+        activityTimer = 0f;
+        activityDuration = 60f;
     }
 
     // Update is called once per frame
@@ -85,6 +109,35 @@ public class StatScript : MonoBehaviour
         }
 
         damageDelayTimer++;
+
+        
+        if (securityLevel == 1 && spawnTimer < spawnCooldown && spawnIntervalTimer > spawnIntervalCooldown)
+        {
+            spawnWave();
+
+        }
+        else
+        {
+            //print("Securitylvl: " + securityLevel);
+            //print("Spawntimer: " + spawnTimer);
+            //print("spawnintervalTimer: " + spawnIntervalTimer);
+
+        }
+        if (securityLevel > 0)
+        {
+            spawnTimer += Time.deltaTime;
+        }
+        
+        spawnIntervalTimer += Time.deltaTime;
+    }
+
+    private void FixedUpdate()
+    {
+        activityTimer += Time.deltaTime;
+        if (activityTimer >= activityDuration)
+        {
+            nextActivity();
+        }
     }
     //public void takeDamage(float damageTaken)
     //{
@@ -184,5 +237,20 @@ public class StatScript : MonoBehaviour
 
 
     }
+
+    private void spawnWave()
+    {
+
+        //print("spawning wave");
+        enemyInstance = Instantiate(enemyPrefab, spawnPoints[Random.Range(0,2)].position, Quaternion.identity);
+        enemyInstance.GetComponent<Enemy>().patrolDestination = -1;
+        spawnIntervalTimer = 0f;
+    }
+
+    private void nextActivity()
+    {
+        activityNumber = (activityNumber + 1) % 3;
+    }
+    //idea knockback gun
 
 }

@@ -7,7 +7,12 @@ public class screenShake : MonoBehaviour
     [SerializeField] AnimationCurve curve;
     [SerializeField] float duration = 1f;
     private float elapsedTime;
+    private GameObject player;
 
+    private void Awake()
+    {
+        player = GameObject.Find("Player");
+    }
     // Update is called once per frame
     void Update()
     {
@@ -16,6 +21,7 @@ public class screenShake : MonoBehaviour
             start = false;
             StartCoroutine(Shake());
         }
+        transform.position = new Vector3(player.transform.position.x, player.transform.position.y, -10);
     }
 
     IEnumerator Shake()
