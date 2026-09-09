@@ -32,24 +32,7 @@ public class PlayerMovement : MonoBehaviour
     private GameObject bridgeDoorOpen;
     private GameObject firstStairsBackground;
     private GameObject secondBackground;
-    private GameObject yardDoor1;
-    private GameObject yardDoor1Open;
-    private GameObject yardDoor1Close;
-    private GameObject yardDoor2;
-    private GameObject yardDoor2Open;
-    private GameObject yardDoor2Close;
-    private GameObject securityDoor1;
-    private GameObject securityDoor1Open;
-    private GameObject securityDoor1Close;
-    private GameObject securityDoor2;
-    private GameObject securityDoor2Open;
-    private GameObject securityDoor2Close;
-    private GameObject closetDoor;
-    private GameObject closetDoorOpen;
-    private GameObject closetDoorClose;
-    private GameObject medDoor;
-    private GameObject medDoorOpen;
-    private GameObject medDoorClose;
+
 
 
 
@@ -74,43 +57,7 @@ public class PlayerMovement : MonoBehaviour
         bridgeDoorOpen = GameObject.Find("Main Building Bridge Door (Open)");
         firstStairsBackground = GameObject.Find("Main Building (2.5)");
         secondBackground = GameObject.Find("Main Building (2)");
-        yardDoor1 = GameObject.Find("Yard Door (1)");
-        yardDoor1Open = yardDoor1.transform.Find("Open").gameObject;
-        yardDoor1Close = yardDoor1.transform.Find("Close").gameObject;
-        yardDoor2 = GameObject.Find("Yard Door (2)");
-        yardDoor2Open = yardDoor2.transform.Find("Open").gameObject;
-        yardDoor2Close = yardDoor2.transform.Find("Close").gameObject;
-        securityDoor1 = GameObject.Find("Security Door (1)");
-        securityDoor1Open = securityDoor1.transform.Find("Open").gameObject;
-        securityDoor1Close = securityDoor1.transform.Find("Close").gameObject;
-        securityDoor2 = GameObject.Find("Security Door (2)");
-        securityDoor2Open = securityDoor2.transform.Find("Open").gameObject;
-        securityDoor2Close = securityDoor2.transform.Find("Close").gameObject;
-        closetDoor = GameObject.Find("Closet");
-        closetDoorOpen = closetDoor.transform.Find("Open").gameObject;
-        closetDoorClose = closetDoor.transform.Find("Close").gameObject;
-        medDoor = GameObject.Find("Med Bay");
-        medDoorOpen = medDoor.transform.Find("Open").gameObject;
-        medDoorClose = medDoor.transform.Find("Close").gameObject;
-
-
-
-        //bridgeDoorClose.SetActive(false);
-        firstStairsBackground.SetActive(false);
-        secondBackground.SetActive(false);
-        yardDoor1Open.SetActive(false);
-        yardDoor2Open.SetActive(false);
-        securityDoor1Open.SetActive(false);
-        securityDoor2Open.SetActive(false);
-        closetDoorOpen.SetActive(false);
-        medDoorOpen.SetActive(false);
-
-        yardDoor1Close.SetActive(true);
-        yardDoor2Close.SetActive(true);
-        securityDoor1Close.SetActive(true);
-        securityDoor2Close.SetActive(true);
-        closetDoorClose.SetActive(true);
-        medDoorClose.SetActive(true);
+        
 
         //firstBackgroundRenderer = firstBackground.GetComponent<TilemapRenderer>();
         //firstWallsRenderer = firstWallsRenderer.GetComponent<TilemapRenderer>();
@@ -118,6 +65,9 @@ public class PlayerMovement : MonoBehaviour
         //secondBackgroundRenderer;
 
         currentFloor = 1;
+
+        firstStairsBackground.SetActive(false);
+        secondBackground.SetActive(false);
 
 
 }
@@ -204,93 +154,33 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if ((context.gameObject.name == "Yard Door (1)") && (Input.GetKeyDown(KeyCode.F)))
-        {
-            if (yardDoor1Open.activeSelf)
-            {
-                yardDoor1Open.SetActive(false);
-                yardDoor1Close.SetActive(true);
-     
-            }
-            else
-            {
-                yardDoor1Open.SetActive(true);
-                yardDoor1Close.SetActive(false);
-            }
+{
+            statManagerScript.interactDoor(context.gameObject);
         }
 
         if ((context.gameObject.name == "Yard Door (2)") && (Input.GetKeyDown(KeyCode.F)))
         {
-            if (yardDoor2Open.activeSelf)
-            {
-                yardDoor2Open.SetActive(false);
-                yardDoor2Close.SetActive(true);
-
-            }
-            else
-            {
-                yardDoor2Open.SetActive(true);
-                yardDoor2Close.SetActive(false);
-            }
+            statManagerScript.interactDoor(context.gameObject);
         }
 
         if ((context.gameObject.name == "Security Door(1)") && (Input.GetKeyDown(KeyCode.F)))
         {
-            if (securityDoor1Open.activeSelf)
-            {
-                securityDoor1Open.SetActive(false);
-                securityDoor1Close.SetActive(true);
-
-            }
-            else
-            {
-                securityDoor1Open.SetActive(true);
-                securityDoor1Close.SetActive(false);
-            }
+            statManagerScript.interactDoor(context.gameObject);
         }
 
         if ((context.gameObject.name == "Security Door (2)") && (Input.GetKeyDown(KeyCode.F)))
         {
-            if (securityDoor2Open.activeSelf)
-            {
-                securityDoor2Open.SetActive(false);
-                securityDoor2Close.SetActive(true);
-
-            }
-            else
-            {
-                securityDoor2Open.SetActive(true);
-                securityDoor2Close.SetActive(false);
-            }
+            statManagerScript.interactDoor(context.gameObject);
         }
 
         if ((context.gameObject.name == "Closet") && (Input.GetKeyDown(KeyCode.F)))
         {
-            if (closetDoorOpen.activeSelf)
-            {
-                closetDoorOpen.SetActive(false);
-                closetDoorClose.SetActive(true);
-
-            }
-            else
-            {
-                closetDoorOpen.SetActive(true);
-                closetDoorClose.SetActive(false);
-            }
+            statManagerScript.interactDoor(context.gameObject);
         }
 
         if ((context.gameObject.name == "Med Bay") && (Input.GetKeyDown(KeyCode.F)))
         {
-            if (medDoorOpen.activeSelf)
-            {
-                medDoorOpen.SetActive(false);
-                medDoorClose.SetActive(true);
-
-            }
-            else
-            {
-                medDoorOpen.SetActive(true);
-                medDoorClose.SetActive(false);
-            }
+            statManagerScript.interactDoor(context.gameObject);
         }
     }
 

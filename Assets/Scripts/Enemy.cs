@@ -169,56 +169,56 @@ public class Enemy : MonoBehaviour
             Debug.DrawRay(flashlightTransform.position, hitDirection, Color.green);
         }
 
-        //if (patrolDestination == -1)
-        //{
-        //    agentTarget = target.position;
-        //}
-        //else if (patrolDestination == 0)
-        //{
-        //    agentTarget = patrolPoints[0].position;
-        //    if (Vector2.Distance(transform.position, patrolPoints[0].position) < 0.1)
-        //    {
-        //        patrolDestination = 1;
-
-        //    }
-        //}
-        //else if (patrolDestination == 1)
-        //{
-        //    agentTarget = patrolPoints[1].position;
-        //    if (Vector2.Distance(transform.position, patrolPoints[1].position) < 0.1)
-        //    {
-        //        patrolDestination = 0;
-        //    }
-        //}
-
-        if (statManagerScript.activityNumber == 0)//cells
+        if (patrolDestination == -1)
         {
-            agentTarget = patrolPoints[3].position;
-            if (Vector2.Distance(transform.position, patrolPoints[3].position) < 0.1)
-            {
-                agentTarget = patrolPoints[2].position;
-            }
-
-            if (Vector2.Distance(transform.position, patrolPoints[2].position) < 0.1)
-            {
-                agentTarget = patrolPoints[0].position;
-            }
-        } else if (statManagerScript.activityNumber == 1)//yard
+            agentTarget = target.position;
+        }
+        else if (patrolDestination == 0)
         {
-            agentTarget = patrolPoints[3].position;
-        }else if (statManagerScript.activityNumber == 2)//caf
-        {
-            agentTarget = patrolPoints[2].position;
-            if (Vector2.Distance(transform.position, patrolPoints[2].position) < 0.1)
+            agentTarget = patrolPoints[0].position;
+            if (Vector2.Distance(transform.position, patrolPoints[0].position) < 0.1)
             {
-                agentTarget = patrolPoints[3].position;
-            }
+                patrolDestination = 1;
 
-            if (Vector2.Distance(transform.position, patrolPoints[2].position) < 0.1)
-            {
-                agentTarget = patrolPoints[0].position;
             }
         }
+        else if (patrolDestination == 1)
+        {
+            agentTarget = patrolPoints[1].position;
+            if (Vector2.Distance(transform.position, patrolPoints[1].position) < 0.1)
+            {
+                patrolDestination = 0;
+            }
+        }
+
+        //if (statManagerScript.activityNumber == 0)//cells
+        //{
+        //    agentTarget = patrolPoints[3].position;
+        //    if (Vector2.Distance(transform.position, patrolPoints[3].position) < 0.1)
+        //    {
+        //        agentTarget = patrolPoints[2].position;
+        //    }
+
+        //    if (Vector2.Distance(transform.position, patrolPoints[2].position) < 0.1)
+        //    {
+        //        agentTarget = patrolPoints[0].position;
+        //    }
+        //} else if (statManagerScript.activityNumber == 1)//yard
+        //{
+        //    agentTarget = patrolPoints[3].position;
+        //}else if (statManagerScript.activityNumber == 2)//caf
+        //{
+        //    agentTarget = patrolPoints[2].position;
+        //    if (Vector2.Distance(transform.position, patrolPoints[2].position) < 0.1)
+        //    {
+        //        agentTarget = patrolPoints[3].position;
+        //    }
+
+        //    if (Vector2.Distance(transform.position, patrolPoints[2].position) < 0.1)
+        //    {
+        //        agentTarget = patrolPoints[0].position;
+        //    }
+        //}
 
 
         targetDistance = transform.position - agentTarget;
