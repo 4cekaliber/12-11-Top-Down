@@ -29,6 +29,7 @@ public class StatScript : MonoBehaviour
 
     private GameObject bulletTransform;
     private GameObject inventory;
+    private GameObject settings;
 
     public int securityLevel;
     [SerializeField] private Transform[] spawnPoints;
@@ -86,8 +87,10 @@ public class StatScript : MonoBehaviour
         Key1Image = GameObject.Find("Key Image");
         Key1Image.SetActive(false);
 
-        inventory = GameObject.Find("Inventory");
+        inventory = GameObject.Find("Menu");
         inventory.SetActive(false);
+        settings = GameObject.Find("Settings");
+        settings.SetActive(false);
 
         bulletTransform = GameObject.Find("BulletTransform");
 
@@ -98,7 +101,7 @@ public class StatScript : MonoBehaviour
 
         activityNumber = 0;
         activityTimer = 0f;
-        activityDuration = 60f;
+        activityDuration = 20f;
 
         yardDoor1 = GameObject.Find("Yard Door (1)");
         yardDoor1Open = yardDoor1.transform.Find("Open").gameObject;
@@ -160,6 +163,11 @@ public class StatScript : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.I))
         {
             inventoryActivation();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            settingsActivation();
         }
 
         damageDelayTimer++;
@@ -292,6 +300,21 @@ public class StatScript : MonoBehaviour
 
     }
 
+    private void settingsActivation()
+    {
+        if (settings.activeSelf)
+        {
+            settings.SetActive(false);
+            
+        }
+        else
+        {
+            settings.SetActive(true);
+            
+        }
+
+
+    }
     private void spawnWave()
     {
 
@@ -304,6 +327,8 @@ public class StatScript : MonoBehaviour
     private void nextActivity()
     {
         activityNumber = (activityNumber + 1) % 3;
+        activityTimer = 0f;
+        print("Current Activity : "+ activityNumber);
     }
     //idea knockback gun
 

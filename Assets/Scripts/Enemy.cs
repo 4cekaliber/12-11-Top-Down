@@ -47,6 +47,12 @@ public class Enemy : MonoBehaviour
     private Vector3 contactVector;
     Quaternion bloodRotation;
 
+    private bool touchingPoint0;
+    private bool touchingPoint1;
+    private bool touchingPoint2;
+    private bool touchingPoint3;
+    private int activityTracker;
+
     private int currentFloor;
     private void Awake()
     {
@@ -71,8 +77,13 @@ public class Enemy : MonoBehaviour
         patrolDestination = 0;
         audioSource = GetComponent<AudioSource>();
         audioSource.clip = swordSound;
+        activityTracker = 0;
         currentFloor = 1;
-    }
+        touchingPoint0 = false;
+        touchingPoint1 = false;
+        touchingPoint2 = false;
+        touchingPoint3 = false;
+}
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -168,57 +179,115 @@ public class Enemy : MonoBehaviour
             Vector2 hitDirection = rayHit.collider.transform.position - transform.position;
             Debug.DrawRay(flashlightTransform.position, hitDirection, Color.green);
         }
-
-        if (patrolDestination == -1)
+        if (activityTracker != statManagerScript.activityNumber)
         {
-            agentTarget = target.position;
+            touchingPoint0 = false;
+            touchingPoint1 = false;
+            touchingPoint2 = false;
+            touchingPoint3 = false;
+            activityTracker = statManagerScript.activityNumber;
         }
-        else if (patrolDestination == 0)
-        {
-            agentTarget = patrolPoints[0].position;
-            if (Vector2.Distance(transform.position, patrolPoints[0].position) < 0.1)
-            {
-                patrolDestination = 1;
-
-            }
-        }
-        else if (patrolDestination == 1)
-        {
-            agentTarget = patrolPoints[1].position;
-            if (Vector2.Distance(transform.position, patrolPoints[1].position) < 0.1)
-            {
-                patrolDestination = 0;
-            }
-        }
-
-        //if (statManagerScript.activityNumber == 0)//cells
+        //if (patrolDestination == -1)
         //{
-        //    agentTarget = patrolPoints[3].position;
-        //    if (Vector2.Distance(transform.position, patrolPoints[3].position) < 0.1)
-        //    {
-        //        agentTarget = patrolPoints[2].position;
-        //    }
-
-        //    if (Vector2.Distance(transform.position, patrolPoints[2].position) < 0.1)
-        //    {
-        //        agentTarget = patrolPoints[0].position;
-        //    }
-        //} else if (statManagerScript.activityNumber == 1)//yard
+        //    agentTarget = target.position;
+        //}
+        //else if (patrolDestination == 0)
         //{
-        //    agentTarget = patrolPoints[3].position;
-        //}else if (statManagerScript.activityNumber == 2)//caf
-        //{
-        //    agentTarget = patrolPoints[2].position;
-        //    if (Vector2.Distance(transform.position, patrolPoints[2].position) < 0.1)
+        //    agentTarget = patrolPoints[0].position;
+        //    if (Vector2.Distance(transform.position, patrolPoints[0].position) < 0.1)
         //    {
-        //        agentTarget = patrolPoints[3].position;
-        //    }
+        //        patrolDestination = 1;
 
-        //    if (Vector2.Distance(transform.position, patrolPoints[2].position) < 0.1)
-        //    {
-        //        agentTarget = patrolPoints[0].position;
         //    }
         //}
+        //else if (patrolDestination == 1)
+        //{
+        //    agentTarget = patrolPoints[1].position;
+        //    if (Vector2.Distance(transform.position, patrolPoints[1].position) < 0.1)
+        //    {
+        //        patrolDestination = 0;
+        //    }
+        //}
+        //first, just make sure that the enemy can transition between cell and cafeteria seemlessly, first fix bug that prevents enemies from reappearing when coming back downstairs
+        //then figure out how to make the enemy actually be able to follow patrol points to cafeteria from first floor and from caf to cells
+        if (statManagerScript.activityNumber == 0)//cells
+        {
+            if (currentFloor == 1)
+            {
+                agentTarget = patrolPoints[0].position;
+            }
+            else if (currentFloor == 2)
+            {
+                if ((!touchingPoint3))
+                {
+                    agentTarget = patrolPoints[3].position;
+                }
+                if (Vector2.Distance(transform.position, patrolPoints[3].position) < 0.1)
+                {
+                    touchingPoint3 = true;
+                    agentTarget = patrolPoints[2].position;
+                }
+                if ((touchingPoint3) && Vector2.Distance(transform.position, patrolPoints[2].position) < 0.1)
+                {
+                    touchingPoint2 = true;
+                    agentTarget = patrolPoints[0].position;
+                    currentFloor = 1;
+                    spriteRenderer.enabled = false;
+                    animator.enabled = false;
+                    flashlightObject.SetActive(false);
+                    headObject.SetActive(false);
+                    effectsObject.SetActive(false);
+                    rb.simulated = false;
+                }
+            }
+
+
+        }
+        else if (statManagerScript.activityNumber == 1)//yard
+        {
+            if (currentFloor == 1)
+            {
+                agentTarget = patrolPoints[1].position;
+            }
+            else if (currentFloor == 2)
+            {
+
+            }
+
+        }
+        else if (statManagerScript.activityNumber == 2)//caf
+        {
+            if (currentFloor == 1){
+                
+                if ((touchingPoint2 == false))
+                {
+                    agentTarget = patrolPoints[2].position;
+                }
+                if (Vector2.Distance(transform.position, patrolPoints[2].position) < 0.1)
+                {
+                    touchingPoint2 = true;
+                    agentTarget = patrolPoints[3].position;
+                    currentFloor = 2;
+                    spriteRenderer.enabled = false;
+                    animator.enabled = false;
+                    flashlightObject.SetActive(false);
+                    headObject.SetActive(false);
+                    effectsObject.SetActive(false);
+                    rb.simulated = false;
+
+                }
+                if ((touchingPoint2) && Vector2.Distance(transform.position, patrolPoints[3].position) < 0.1)
+                {
+                    
+                    touchingPoint3 = true;
+                    agentTarget = patrolPoints[0].position;
+                }
+            }else if (currentFloor == 2)
+            {
+                //agentTarget = patrolPoints[1].position;
+            }
+
+        }
 
 
         targetDistance = transform.position - agentTarget;
@@ -233,17 +302,6 @@ public class Enemy : MonoBehaviour
         agent.SetDestination(agentTarget);
     }
 
-    private void OnCollisionEnter2D(Collision2D context)
-    {
-        //if (context.gameObject.tag == "Bullet")
-        //{
-        //    damageParticlesInstance = Instantiate(damageParticles, transform.position, Quaternion.identity);
-        //    statManagerScript.addScore(100);
-        //    Destroy(gameObject);
-        //}
-
-       
-    }
 
     private void OnTriggerEnter2D(Collider2D context)
     {
@@ -277,26 +335,55 @@ public class Enemy : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if (context.gameObject.name == "Main Building (1)")
+        //if (context.gameObject.name == "Main Building (1)")
+        //{
+        //    currentFloor = 2;
+        //    spriteRenderer.enabled = false;
+        //    animator.enabled = false;
+        //    flashlightObject.SetActive(false);
+        //    headObject.SetActive(false);
+        //    effectsObject.SetActive(false);
+        //    rb.simulated = false;
+        //}
+        //if (context.gameObject.name == "Main Building (2.5)")
+        //{
+        //    currentFloor = 1;
+        //    spriteRenderer.enabled = false;
+        //    animator.enabled = false;
+        //    flashlightObject.SetActive(false);
+        //    headObject.SetActive(false);
+        //    effectsObject.SetActive(false);
+        //    rb.simulated = false;
+        //}
+
+        if (IsDoor(context.gameObject) && (context.gameObject.transform.Find("Open").gameObject.activeSelf == false))
         {
-            currentFloor = 2;
-            spriteRenderer.enabled = false;
-            animator.enabled = false;
-            flashlightObject.SetActive(false);
-            headObject.SetActive(false);
-            effectsObject.SetActive(false);
-            rb.simulated = false;
+            statManagerScript.interactDoor(context.gameObject);
         }
-        if (context.gameObject.name == "Main Building (2.5)")
+
+        
+    }
+
+    private void OnTriggerExit2D(Collider2D context)
+    {
+        if (IsDoor(context.gameObject) && (context.gameObject.transform.Find("Close").gameObject.activeSelf == false))
         {
-            currentFloor = 1;
-            spriteRenderer.enabled = false;
-            animator.enabled = false;
-            flashlightObject.SetActive(false);
-            headObject.SetActive(false);
-            effectsObject.SetActive(false);
-            rb.simulated = false;
+            statManagerScript.interactDoor(context.gameObject);
         }
+    }
+
+    private bool IsDoor(GameObject contact)
+    {
+        if ((contact.name == "Yard Door (1)") || (contact.name == "Yard Door (2)") || (contact.name == "Security Door (1)") || (contact.name == "Security Door (1)") || (contact.name == "Closet") && (contact.name == "Med Bay"))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+            
     }
 
 }
